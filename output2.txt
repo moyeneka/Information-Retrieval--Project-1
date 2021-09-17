@@ -1,14 +1,8 @@
-Words: html :
-Words: head :
-Words: title :
 Words: this :
 Words: is :
 Words: a :
 Words: test :
 Words: file :
-Words: title :
-Words: head :
-Words: body :
 Words: this :
 Words: file :
 Words: has :
@@ -40,5 +34,3 @@ Words: interesting :
 Words: or :
 Words: much :
 Words: content :
-Words: body :
-Words: html :
