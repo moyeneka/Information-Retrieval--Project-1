@@ -7,6 +7,7 @@ import ply
 from ply import lex
 from ply.lex import TOKEN
 import sys
+import os
 
 # list of TOKENS
 tokens =[
@@ -49,7 +50,8 @@ if (len(sys.argv) != 3):
 else:
     #Read file names from arguments
     InFile = str(sys.argv[1])
-    OutFile = str(sys.argv[2])
+    fileName = os.path.basename(InFile)
+    OutFile = str(sys.argv[2]+ fileName + ".txt")
 
     
     lexer = lex.lex()
