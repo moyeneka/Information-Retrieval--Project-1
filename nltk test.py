@@ -1,8 +1,10 @@
 import nltk
 import sys
+import os
 
 InFile = str(sys.argv[1])
-OutFile = str(sys.argv[2])
+fileName = os.path.basename(InFile)
+OutFile = str(sys.argv[2]+ fileName + ".txt")
 html_tokenizer = nltk.RegexpTokenizer(r"(?:</?\w+>)|(?:<.+/?>)", gaps=True)
 non_html_tokenizer=nltk.RegexpTokenizer(r"(?:\d+.?\d+.?\d+)|\w+")
 new_corpus = []
