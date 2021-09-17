@@ -1,9 +1,10 @@
 import nltk
-nltk.download('punkt')
 import sys
 
 InFile = str(sys.argv[1])
 OutFile = str(sys.argv[2])
+html_tokenizer = nltk.RegexpTokenizer(r"(?:</?\w+>)|(?:<.+/?>)", gaps=True)
+non_html_tokenizer=nltk.RegexpTokenizer(r"(?:\d+.?\d+.?\d+)|\w+")
 new_corpus = []
 
 with open(InFile, "r") as InputFile:
@@ -13,9 +14,13 @@ with open(InFile, "r") as InputFile:
         for line in InputFile:
             try:
                 corpus = str(line.strip())
-                new_corpus += nltk.tokenize.word_tokenize(corpus)
+                new_corpus += html_tokenizer.tokenize(corpus)
             
             except EOFError:
                 break
+
         for x in new_corpus:
-            OutputFile.write(x + "\n")
+            clean_corpus = []
+            clean_corpus += non_html_tokenizer.tokenize(x)
+            for y in clean_corpus:
+                OutputFile.write(y.lower() + "\n")
