@@ -10,6 +10,7 @@ import sys
 import glob
 import os.path
 import re
+import hashtable
 
 # list of TOKENS
 tokens = (
@@ -97,6 +98,8 @@ def t_error(t):
 def processDocumentHashtable():
    print("Document hashtable should have been filled.\n")
    print("Time to deal with its contents.\n")
+   
+   
 
 # Processing with multiple files 
 inputDir = sys.argv[1]
@@ -105,29 +108,37 @@ if not os.path.exists(inputDir) or not os.path.exists(outputDir):
     print("Path not valid \n Enter valid path ")
     quit()
 
-list_of_files = glob.glob(inputDir + '/*.txt')
+list_of_files = glob.glob(inputDir + '/*.html')
 lexer = lex.lex()
 # num_tokens is used to show that it shares the same memory when running lex
 # which can be applied for your hash table
 lexer.num_tokens = 0
 # loop through all files in input directory
 for file_name in list_of_files:
+    document_ht = hashtable.HashTable(6848)
     myFile = open(file_name)
     lines = myFile.read()
     f=open(os.path.join(outputDir,
-    os.path.basename(file_name)) , 'w')
+    os.path.basename(file_name + ".txt")) , 'w')
     try:
         lexer.input(lines)
         for token in lexer:
-            f.write(token.value)
+            document_ht.insert(str(token.value), 1)
+            #f.write(token.value + "\n")
             lexer.num_tokens += 1            
     except EOFError:
         break
     
     print("Process file: ", file_name)
+    processDocumentHashtable()
+    for i in range (0, document_ht.size, 1):
+        value, data = document_ht.gettable(i)
+        if value != None:
+            f.write(str(value) + " " + str(data) + "\n")
+    unique_tokens, total_tokens = document_ht.getCount()
+    f.write(str(file_name) + "     Unique Tokens: " + str(unique_tokens) + "   Total Tokens: " + str(total_tokens))
     f.close()
 
-    processDocumentHashtable()
 
 print("Total tokens: ", lexer.num_tokens)
 
