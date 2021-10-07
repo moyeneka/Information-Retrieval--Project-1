@@ -137,10 +137,10 @@ for file_name in list_of_files:
     doc_id += 1
 
 dict = os.path.join(outputDir,
-os.path.basename(file_name + "_dict.txt"))
+os.path.basename("dict.txt"))
 
 post = os.path.join(outputDir,
-os.path.basename(file_name + "_post.txt"))
+os.path.basename("post.txt"))
 
 global_ht.writeToFile(dict, post)
 
