@@ -124,8 +124,6 @@ for file_name in list_of_files:
     
     myFile = open(file_name)
     lines = myFile.read()
-    f=open(os.path.join(outputDir,
-    os.path.basename(file_name + ".txt")) , 'w')
     try:
         lexer.input(lines)
         for token in lexer:
@@ -134,10 +132,19 @@ for file_name in list_of_files:
     except EOFError:
         break
     print("Process file: ", file_name)
-    f.close()
 
     processDocumentHashtable()
     doc_id += 1
+
+dict = os.path.join(outputDir,
+os.path.basename(file_name + "_dict.txt"))
+
+post = os.path.join(outputDir,
+os.path.basename(file_name + "_post.txt"))
+
+global_ht.writeToFile(dict, post)
+
+
 
 print("Total tokens: ", lexer.num_tokens)
 

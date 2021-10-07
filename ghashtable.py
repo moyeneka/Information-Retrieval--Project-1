@@ -96,15 +96,19 @@ class HashTable:
                 print(str(self.term[i]) + " " + str(self.num_docs[i]) + " " +str(self.list[i]))
 
     def writeToFile(self, filename1, filename2):
-        dict = open(filename1)
-        post = open(filename2)
+        dict = open(filename1, 'w')
+        post = open(filename2, 'w')
         start = 0
+
+
 
         for i in range(0, self.size, 1):
             if self.term[i] != None:
-                dict.write(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + start + "\n")
-                post.write(str(self.))
+                dict.write(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + str(start) + "\n")
+                post.write(str(self.list[i]) + " " + str(self.list[i]) + "\n")
                 start = start + self.num_docs[i]
+        dict.close()
+        post.close()
         
 
                 

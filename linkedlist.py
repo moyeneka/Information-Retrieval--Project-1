@@ -53,7 +53,7 @@ class LinkedList:
         test = []
         for node in self:
             if node.term == value:
-                test.append(str(node.term) + ", " + str(node.docid) + ", " + str(node.freq))
+                test.append([node.docid, node.freq])
         return test
                 
 
