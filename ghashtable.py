@@ -55,6 +55,8 @@ class HashTable:
                             self.num_docs[nextslot] += 1
                             self.llist.AddToEnd(term, document, freq)
 
+        self.list[hashvalue] = self.llist.GetTermList(term)
+
     def get(self, key):  # get the value by looking for the key
         startslot = self.hashfunction(key)
         num_docs = None
@@ -91,7 +93,20 @@ class HashTable:
     def print(self):
         for i in range(0, self.size, 1):
             if self.term[i] != None:
-                print(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + str(self.llist.GetTermList(self.term[i])))
+                print(str(self.term[i]) + " " + str(self.num_docs[i]) + " " +str(self.list[i]))
+
+    def writeToFile(self, filename1, filename2):
+        dict = open(filename1)
+        post = open(filename2)
+        start = 0
+
+        for i in range(0, self.size, 1):
+            if self.term[i] != None:
+                dict.write(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + start + "\n")
+                post.write(str(self.))
+                start = start + self.num_docs[i]
+        
+
                 
 
     def __getitem__(self, key):

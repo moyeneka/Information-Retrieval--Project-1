@@ -5,8 +5,8 @@ class Node:
         self.freq = freq
         self.next = None
 
-    def __repr__(self, docid, freq):
-        return self.docid, self.freq
+    def __repr__(self, term, docid, freq):
+        return self.term, self.docid, self.freq
 
 class LinkedList:
     def __init__(self):
@@ -23,7 +23,7 @@ class LinkedList:
         node = self.head
         nodes = []
         for node in self:
-            nodes.append(str(node.docid) + ", " + str(node.freq))
+            nodes.append(str(node.term) + ", " + str(node.docid) + ", " + str(node.freq))
         return "Postings: " + str(nodes)
 
     def AddToFront(self, newterm, newid, newfreq):
@@ -47,13 +47,13 @@ class LinkedList:
     
     def GetList(self):
         for node in self:
-            return node.docid, node.freq
+            return node.term, node.docid, node.freq
 
-    def GetTermList(self, term):
+    def GetTermList(self, value):
         test = []
         for node in self:
-            if node.term is term:
-                test.append(str(node.docid) + ", " + str(node.freq))
+            if node.term == value:
+                test.append(str(node.term) + ", " + str(node.docid) + ", " + str(node.freq))
         return test
                 
 

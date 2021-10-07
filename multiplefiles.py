@@ -16,7 +16,6 @@ import ghashtable
 # Document Hash Table
 doc_size = 13696
 total_size = 140000
-doc_id = 0
 document_ht = hashtable.HashTable(doc_size)
 global_ht = ghashtable.HashTable(total_size)
 
@@ -98,17 +97,14 @@ def t_error(t):
     # print("Illegal characters: ", t.value)
     t.lexer.skip(1)
 
-def processDocumentHashtable(doc_id):
+def processDocumentHashtable():
    print("Document hashtable should have been filled.\n")
    print("Time to deal with its contents.\n")
    for i in range(0, document_ht.size, 1):
        value, data = document_ht.gettable(i)
-       if value != None:
-        #    print(str(value) + " " + str(data))
+       if value is not None:
            global_ht.insert(value, doc_id, data)
-   global_ht.print()
    document_ht.__init__(doc_size)
-   doc_id += 1
 
 # Processing with multiple files 
 inputDir = sys.argv[1]
@@ -122,7 +118,7 @@ lexer = lex.lex()
 # num_tokens is used to show that it shares the same memory when running lex
 # which can be applied for your hash table
 lexer.num_tokens = 0
-
+doc_id = 0
 # loop through all files in input directory
 for file_name in list_of_files:
     
@@ -133,17 +129,15 @@ for file_name in list_of_files:
     try:
         lexer.input(lines)
         for token in lexer:
-            document_ht.insert(token.value)
+            document_ht.insert(str(token.value))
             lexer.num_tokens += 1            
     except EOFError:
         break
-    
     print("Process file: ", file_name)
     f.close()
 
-    processDocumentHashtable(doc_id)
-
-global_ht.print()
+    processDocumentHashtable()
+    doc_id += 1
 
 print("Total tokens: ", lexer.num_tokens)
 
