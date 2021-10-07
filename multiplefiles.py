@@ -8,12 +8,17 @@ from ply import lex
 from ply.lex import TOKEN
 import sys
 import glob
+import re
 import os.path
 import hashtable
+import ghashtable
 
 # Document Hash Table
-doc_size = 6848
+doc_size = 13696
+total_size = 140000
+doc_id = 0
 document_ht = hashtable.HashTable(doc_size)
+global_ht = ghashtable.HashTable(total_size)
 
 # list of TOKENS
 tokens =[
@@ -30,13 +35,8 @@ tokens =[
 ]
 
 #---------  INSERT ANY CODE CALLED BY THE LEX RULES HERE --------
-
-#  Section of code which specifies lex substitution patterns
-DIGITS  = r'[0-9]+'
-UPPERCASE = r'[A-Z]'
-
 # tokens DEFINITION - Section which specifies regular expressions and action
-+#rule for html tags
+#rule for html tags
 def t_TAG(t):
     r'\s*<[^>]*>\s*'
     pass
@@ -98,11 +98,17 @@ def t_error(t):
     # print("Illegal characters: ", t.value)
     t.lexer.skip(1)
 
-def processDocumentHashtable():
+def processDocumentHashtable(doc_id):
    print("Document hashtable should have been filled.\n")
    print("Time to deal with its contents.\n")
-   document_ht.print()
+   for i in range(0, document_ht.size, 1):
+       value, data = document_ht.gettable(i)
+       if value != None:
+        #    print(str(value) + " " + str(data))
+           global_ht.insert(value, doc_id, data)
+   global_ht.print()
    document_ht.__init__(doc_size)
+   doc_id += 1
 
 # Processing with multiple files 
 inputDir = sys.argv[1]
@@ -119,6 +125,7 @@ lexer.num_tokens = 0
 
 # loop through all files in input directory
 for file_name in list_of_files:
+    
     myFile = open(file_name)
     lines = myFile.read()
     f=open(os.path.join(outputDir,
@@ -126,7 +133,7 @@ for file_name in list_of_files:
     try:
         lexer.input(lines)
         for token in lexer:
-            document_ht.insert(str(token))
+            document_ht.insert(token.value)
             lexer.num_tokens += 1            
     except EOFError:
         break
@@ -134,7 +141,9 @@ for file_name in list_of_files:
     print("Process file: ", file_name)
     f.close()
 
-    processDocumentHashtable()
+    processDocumentHashtable(doc_id)
+
+global_ht.print()
 
 print("Total tokens: ", lexer.num_tokens)
 

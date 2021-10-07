@@ -73,8 +73,8 @@ class HashTable:
                     stop = True
         return found
 
-    def getCount(self):
-        return self.utokens, self.ttokens
+    def gettable(self, position):
+        return self.slots[position], self.data[position]
 
     def print(self):
         for i in range(0, self.size, 1):

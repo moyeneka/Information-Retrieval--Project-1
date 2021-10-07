@@ -5,16 +5,13 @@
 import hashlib
 import linkedlist
 
-L = linkedlist.LinkedList()
-
 class HashTable:
-    
-
     def __init__(self, table_size):
         self.size=table_size # size of hash table
         self.term=[None]*self.size # initialize keys
         self.num_docs=[None]*self.size # initialize values
         self.list=[None]*self.size
+        self.llist = linkedlist.LinkedList()
         
     def hashfunction(self,key): # hash function to find the location
         h = hashlib.sha1() # any other algorithm found in hashlib.algorithms_guaranteed can be used here
@@ -30,32 +27,33 @@ class HashTable:
         if self.term[hashvalue] == None:
             self.term[hashvalue] = term
             self.num_docs[hashvalue] = 1
-            L.__init__()
-            L.AddToFront(document, freq)
-            self.list[hashvalue] = L
+            self.llist.AddToEnd(term, document, freq)
             
         else:
             if self.term[hashvalue] == term:  # key already exists, update the value
                 self.num_docs[hashvalue] += 1
-                L.AddToEnd(document, freq)
+                self.llist.AddToEnd(term, document, freq)
 
             else:
                 nextslot=self.rehash(hashvalue) # index collision, using linear probing to find the location
                 if self.term[nextslot] == None:
                     self.term[nextslot] = term
-                    self.num_doc[nextslot] = 1
+                    self.num_docs[nextslot] = 1
+                    self.llist.AddToEnd(term, document, freq)
                 elif self.term[nextslot] == term:
                     self.num_docs[nextslot] += 1
+                    self.llist.AddToEnd(term, document, freq)
                 else:
-                    while self.term[nextslot] != None and self.term[nextslot] != key:
+                    while self.term[nextslot] != None and self.term[nextslot] != term:
                         nextslot=self.rehash(nextslot)
                         if self.term[nextslot] == None:
                             self.term[nextslot] = term
                             self.num_docs[nextslot] = 1
+                            self.llist.AddToEnd(term, document, freq)
 
                         elif self.term[nextslot] == term:
                             self.num_docs[nextslot] += 1
-                self.list[hashvalue] = L
+                            self.llist.AddToEnd(term, document, freq)
 
     def get(self, key):  # get the value by looking for the key
         startslot = self.hashfunction(key)
@@ -93,7 +91,7 @@ class HashTable:
     def print(self):
         for i in range(0, self.size, 1):
             if self.term[i] != None:
-                print(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + str(self.list[i]))
+                print(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + str(self.llist.GetTermList(self.term[i])))
                 
 
     def __getitem__(self, key):

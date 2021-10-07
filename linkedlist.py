@@ -1,5 +1,6 @@
 class Node:
-    def __init__(self, docid, freq):
+    def __init__(self, term, docid, freq):
+        self.term = term
         self.docid = docid
         self.freq = freq
         self.next = None
@@ -25,16 +26,16 @@ class LinkedList:
             nodes.append(str(node.docid) + ", " + str(node.freq))
         return "Postings: " + str(nodes)
 
-    def AddToFront(self, newid, newfreq):
-        NewNode = Node(newid, newfreq)
+    def AddToFront(self, newterm, newid, newfreq):
+        NewNode = Node(newterm, newid, newfreq)
         if self.head is None:
             self.tail = NewNode
         
         NewNode.next = self.head
         self.head = NewNode
 
-    def AddToEnd(self, newid, newfreq):
-        NewNode = Node(newid, newfreq)
+    def AddToEnd(self, newterm, newid, newfreq):
+        NewNode = Node(newterm, newid, newfreq)
         NewNode.next = None
 
         if self.tail is None:
@@ -47,6 +48,14 @@ class LinkedList:
     def GetList(self):
         for node in self:
             return node.docid, node.freq
+
+    def GetTermList(self, term):
+        test = []
+        for node in self:
+            if node.term is term:
+                test.append(str(node.docid) + ", " + str(node.freq))
+        return test
+                
 
     def Print(self):
         for node in self:
