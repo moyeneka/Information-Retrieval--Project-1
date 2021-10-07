@@ -105,7 +105,9 @@ class HashTable:
         for i in range(0, self.size, 1):
             if self.term[i] != None:
                 dict.write(str(self.term[i]) + " " + str(self.num_docs[i]) + " " + str(start) + "\n")
-                post.write(str(self.list[i][0][0]) + " " + str(self.list[i][0][1]) + "\n")
+
+                for j in range(0, self.num_docs[i], 1):
+                    post.write(str(self.list[i][j][0]) + " " + str(self.list[i][j][1]) + "\n")
                 start = start + self.num_docs[i]
         dict.close()
         post.close()

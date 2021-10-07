@@ -119,9 +119,15 @@ lexer = lex.lex()
 # which can be applied for your hash table
 lexer.num_tokens = 0
 doc_id = 0
+#open map file
+f=open(os.path.join(outputDir,
+    os.path.basename("map.txt")), 'w')
+
 # loop through all files in input directory
 for file_name in list_of_files:
-    
+    #write to map file
+    f.write(str(file_name) + "\n")
+
     myFile = open(file_name)
     lines = myFile.read()
     try:
@@ -131,11 +137,12 @@ for file_name in list_of_files:
             lexer.num_tokens += 1            
     except EOFError:
         break
-    print("Process file: ", file_name)
 
     processDocumentHashtable()
     doc_id += 1
+f.close()
 
+#make dict and post files
 dict = os.path.join(outputDir,
 os.path.basename("dict.txt"))
 
