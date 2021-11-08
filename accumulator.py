@@ -107,8 +107,7 @@ dict_record_length = 27
 post_record_length = 9
 map_record_length = 12
 ht_size = 0
-doc_id = []
-weight = []
+dict = []
 
 #main
 query = ''
@@ -150,21 +149,18 @@ while True:
     print("\n\ntest: getRecord\n\n")
     #read in records from dict
     word, dict_doc_num, dict_start = getRecord(dictFile, record_num, dict_size, dict_record_length)
-
+    #store to list to access later
+    dict.append([dict_doc_num, dict_start])
     ht_size += int(dict_doc_num)
 
-    #read post record
-    for i in range(int(dict_doc_num)):
-        id1, weight1= getRecord(postFile, int(dict_start) + i, post_size, post_record_length)
-        print(id1 + " " + weight1)
-        doc_id.append(int(id1))
-        weight.append(int(weight1))
-
+#read records into accumulator
 accumulator = hashtable.QueryHashTable(3*ht_size)
 print("\n \n accumulator test \n")
-for i in range(len(doc_id)):
-    # print(str(doc_id[i]) + " " + str(weight[i]))
-    accumulator.insert(doc_id[i], weight[i])
+for i in range(len(dict)):
+    print(dict[i][0] + " " + dict[i][1])
+    for j in range(int(dict[i][0])):
+        doc_id, weight = getRecord(postFile, int(dict[i][1]) + j, post_size, post_record_length)
+        accumulator.insert(int(doc_id), int(weight))
 
 # print("\n \n get test \n")   
 # test = accumulator.get(2)
