@@ -162,6 +162,8 @@ for i in range(len(dict)):
         doc_id, weight = getRecord(postFile, int(dict[i][1]) + j, post_size, post_record_length)
         accumulator.insert(int(doc_id), int(weight))
 
+     
+
 # print("\n \n get test \n")   
 # test = accumulator.get(2)
 # print(str(test))
