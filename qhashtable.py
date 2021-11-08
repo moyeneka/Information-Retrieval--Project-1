@@ -6,7 +6,7 @@ import hashlib
 from collections import deque
 
 # Regular hashtable, except values are numDocs + Linked List pairs instead of frequency counts. Used for tracking all doc frequencies
-class GlobalHashTable(HashTable):
+class QueryHashTable(HashTable):
     # Pair of numDocs and Linked List for cross-file referencing
     class Entry:
         def __init__(self, data):
