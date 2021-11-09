@@ -145,9 +145,11 @@ class QueryHashTable:
         self.size=table_size # size of hash table
         self.slots=[None]*self.size # initialize keys
         self.data=[None]*self.size # initialize values
+        self.nonempty=[]
     
     def reset(self): # reset keys without creating new HT
         self.slots=[None]*self.size # initialize keys
+        self.nonempty=[]
     
     def hashfunction(self,key): # hash function to find the location
         h = hashlib.sha1() # any other algorithm found in hashlib.algorithms_guaranteed can be used here
@@ -162,6 +164,7 @@ class QueryHashTable:
         if self.slots[hashvalue] == None:
             self.slots[hashvalue] = key
             self.data[hashvalue] = data
+            self.nonempty.append(key)
 
         else:
             if self.slots[hashvalue] == key:  # key already exists, update the value
@@ -171,6 +174,7 @@ class QueryHashTable:
                 if self.slots[nextslot] == None:
                     self.slots[nextslot] = key
                     self.data[nextslot] = data
+                    self.nonempty.append(key)
 
                 elif self.slots[nextslot] == key:
                     self.data[nextslot] += data
@@ -180,6 +184,7 @@ class QueryHashTable:
                         if self.slots[nextslot] == None:
                             self.slots[nextslot] = key
                             self.data[nextslot] = data
+                            self.nonempty.append(key)
 
                         elif self.slots[nextslot] == key:
                             self.data[nextslot] += data
@@ -213,6 +218,9 @@ class QueryHashTable:
                 if position == startslot:
                     stop = True
         return found
+    
+    def getNonEmpty(self):
+        return self.nonempty
 
     def __getitem__(self, key):
         return self.get(key)

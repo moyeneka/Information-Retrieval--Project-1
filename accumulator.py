@@ -90,19 +90,34 @@ def hashfunction(key):
     return int(h.hexdigest(), 16)%dict_size
 
 #Get record at recordNum
-def getRecord(f, recordNum, fileSize, recordLength):
+def getRecord(f, recordNum, fileSize, recordLength, token):
     record = ""
     if recordNum >= 0 and recordNum < fileSize:
         f.seek(0,0)
         f.seek(recordLength * recordNum)
         record = f.readline()
+    word, num_docs, start = record.split()
+    while word != "NULL" and word != token:
+        if len(record) < 1:
+            f.seek(0,0)
+        record = f.readline()
+        word, num_docs, start = record.split()
+    
     print(record)
+    return word, num_docs, start
+
+def getFile(f, recordNum, fileSize, recordLength):
+    record = ""
+    if recordNum >= 0 and recordNum < fileSize:
+        f.seek(0,0)
+        f.seek(recordLength * recordNum)
+        record = f.readline()
     return record.split()
 
 #sizes
 dict_size = 350000
-post_size = 20
-map_size = 6
+post_size = 1381027
+map_size = 300
 dict_record_length = 27
 post_record_length = 9
 map_record_length = 12
@@ -146,30 +161,32 @@ while True:
     #get hashtable location for tokenized query
     record_num = hashfunction(tok.value)
 
-    print("\n\ntest: getRecord\n\n")
     #read in records from dict
-    word, dict_doc_num, dict_start = getRecord(dictFile, record_num, dict_size, dict_record_length)
+    word, dict_doc_num, dict_start = getRecord(dictFile, record_num, dict_size, dict_record_length, tok.value)
+
     #store to list to access later
     dict.append([dict_doc_num, dict_start])
     ht_size += int(dict_doc_num)
 
 #read records into accumulator
 accumulator = hashtable.QueryHashTable(3*ht_size)
-print("\n \n accumulator test \n")
 for i in range(len(dict)):
-    print(dict[i][0] + " " + dict[i][1])
     for j in range(int(dict[i][0])):
-        doc_id, weight = getRecord(postFile, int(dict[i][1]) + j, post_size, post_record_length)
+        doc_id, weight = getFile(postFile, int(dict[i][1]) + j, post_size, post_record_length)
         accumulator.insert(int(doc_id), int(weight))
 
-     
+non_empty = []
+nonempty_slots = accumulator.getNonEmpty()
+for i in range(len(nonempty_slots)):
+    data = accumulator.get(nonempty_slots[i])
+    non_empty.append([data, nonempty_slots[i]])
 
-# print("\n \n get test \n")   
-# test = accumulator.get(2)
-# print(str(test))
+non_empty.sort(reverse = True)
 
-# #read map record
-# for i in range(int(dict_doc_num)):
-#     file_name = getRecord(mapFile, int(dict_doc_num) + i, map_size, map_record_length)
-#     print(file_name)
-
+length = min(10, len(non_empty))
+if length < 1:
+    print("No Results")
+else:
+    for i in range(length):
+        file_name = getFile(mapFile, int(non_empty[i][1]), map_size, map_record_length)
+        print("doc_id: " + str(non_empty[i][1]) + " file: " + str(file_name) + " weight: " + str(non_empty[i][0]) + "\n")
